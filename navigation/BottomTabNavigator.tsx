@@ -2,12 +2,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import TabMoviesScreen from '../screens/movies/MoviesScreen';
+import AddMovie from '../screens/movies/components/AddMovie';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import { BottomTabParamList, TabMoviesParamList, TabOneParamList, TabTwoParamList } from '../types';
+import ShowMovie from "../screens/movies/components/ShowMovie";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,8 +20,15 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TabMovies"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      <BottomTab.Screen
+        name="TabMovies"
+        component={TabUsersNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+        }}
+      />
       <BottomTab.Screen
         name="TabOne"
         component={TabOneNavigator}
@@ -44,6 +55,30 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
+
+const TabMoviesStack = createStackNavigator<TabMoviesParamList>();
+
+function TabUsersNavigator() {
+  return (
+    <TabMoviesStack.Navigator>
+      <TabMoviesStack.Screen
+        name="TabMoviesScreen"
+        component={TabMoviesScreen}
+        options={{ headerTitle: 'Movies' }}
+      />
+      <TabMoviesStack.Screen
+        name="AddMovieScreen"
+        component={AddMovie}
+        options={{ headerTitle: 'Add new movie' }}
+      />
+      <TabMoviesStack.Screen
+        name="ShowMovieScreen"
+        component={ShowMovie}
+        options={{ headerTitle: 'About movie' }}
+      />
+    </TabMoviesStack.Navigator>
+  );
+}
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {

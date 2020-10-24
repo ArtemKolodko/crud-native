@@ -6,6 +6,15 @@ export default {
     screens: {
       Root: {
         screens: {
+          TabMovies: {
+            screens: {
+              TabMoviesScreen: 'movies',
+              screens: {
+                AddMovieScreen: 'add',
+                ShowMovieScreen: 'show'
+              }
+            },
+          },
           TabOne: {
             screens: {
               TabOneScreen: 'one',
