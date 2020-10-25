@@ -1,6 +1,5 @@
 export interface IMovie {
     title: string;
-    author: string;
     year: string;
 }
 

@@ -3,11 +3,10 @@ import { IMovie, IMovieCreated } from './interfaces'
 
 const generateId = () => Math.random().toString(36).substr(2, 5)
 
-const createMovie = ({ title, author, year }: IMovie): IMovieCreated => {
+const createMovie = ({ title, year }: IMovie): IMovieCreated => {
   return {
     id: generateId(),
     title,
-    author,
     year
   }
 }
@@ -15,11 +14,11 @@ const createMovie = ({ title, author, year }: IMovie): IMovieCreated => {
 const createMovies = (movies: IMovie[]): IMovieCreated[] => movies.map(movie => createMovie(movie))
 
 const moviesBootstrap = createMovies([
-  { title: 'Pulp Fiction', author: 'Quentin Tarantino', year: '1994' },
-  { title: 'Youth', author: 'Paolo Sorrentino', year: '2015' },
-  { title: 'True Detective', author: 'Nic Pizzolatto', year: '2014' },
-  { title: 'American Beauty', author: 'Sam Mendes', year: '1999' },
-  { title: 'La Belle Noiseuse', author: 'Jacques Rivette', year: '1991' },
+  { title: 'Pulp Fiction', year: '1994' },
+  { title: 'Youth', year: '2015' },
+  { title: 'True Detective', year: '2014' },
+  { title: 'American Beauty', year: '1999' },
+  { title: 'La Belle Noiseuse', year: '1991' },
 ])
 
 class MoviesStore {
@@ -42,9 +41,10 @@ class MoviesStore {
     return this.movies.find(movie => movie.id === id)
   }
 
-  addMovie = (movieData: IMovie) => {
+  addMovie = (movieData: IMovie): IMovieCreated => {
     const movie = createMovie(movieData)
     this.movies = [movie, ...this.movies]
+    return movie
   }
 
   updateMovie = (id: string, movie: IMovie) => {

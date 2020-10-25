@@ -1,22 +1,53 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import React, { useState } from 'react';
 import { observer, inject } from 'mobx-react';
 import { Input, Button } from 'react-native-elements';
+import useStores from "../../../hooks/useStores";
+import styled from "styled-components/native";
 
-const AddMovie = inject('moviesStore')(observer((props: any) => {
-  const { moviesStore } = props
+interface AddMovieProps {
+  navigation: any;
+}
+
+const FormContainer = styled.View`
+  margin-top: 8px;
+`
+
+const ButtonsContainer = styled.View`
+  text-align: center;
+  margin-top: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+`
+
+const AddMovie = inject('moviesStore')(observer(({ navigation }: AddMovieProps) => {
+  const { moviesStore } = useStores()
   const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
   const [year, setYear] = useState('')
-  const onPress = () => {
-    moviesStore.addMovie({ title, author, year })
+  const [titleError, setTitleError] = useState('')
+  const onAddPress = () => {
+    if (title) {
+      setTitleError('')
+      const { id } = moviesStore.addMovie({ title, year })
+      navigation.pop() // Remove last stacked item in history
+      navigation.navigate('ShowMovieScreen', { id })
+    } else {
+      setTitleError('Title is required')
+    }
   }
   return <View>
-    <Text>Enter movie info</Text>
-    <Input placeholder={'Title'} value={title} onChangeText={setTitle} />
-    <Input placeholder={'Author'} value={author} onChangeText={setAuthor} />
-    <Input placeholder={'Year'} value={year} onChangeText={setYear} />
-    <Button title={'Add'} onPress={onPress} />
+    <FormContainer>
+      <Input
+        placeholder={'Movie title. For example: Avengers'}
+        value={title}
+        errorMessage={titleError}
+        onChangeText={setTitle}
+      />
+      <Input placeholder={'Release year. Optional'} value={year} onChangeText={setYear} />
+    </FormContainer>
+    <ButtonsContainer>
+      <Button title={'Add'} onPress={onAddPress} />
+    </ButtonsContainer>
   </View>
 }))
 

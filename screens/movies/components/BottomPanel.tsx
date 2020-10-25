@@ -12,22 +12,12 @@ export default function BottomPanel (props: IBottomPanelProps) {
   </View>
 }
 
-/*
-* position: absolute;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 64px;
-* */
-
 const styles = StyleSheet.create({
   bottomPanel: {
     position: 'absolute',
     width: '100%',
     height: 64,
-    bottom: 0,
+    bottom: 16,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

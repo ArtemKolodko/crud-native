@@ -1,60 +1,68 @@
 import React, { useState } from 'react';
 import { observer, inject } from 'mobx-react';
 import { Input, Button } from 'react-native-elements';
+import { View } from 'react-native';
 import styled from 'styled-components/native'
+import { AntDesign as AntIcon } from '@expo/vector-icons';
 import IMDBInfo from "./IMDBInfo";
 import { IMovie } from "../interfaces";
+import useStores from "../../../hooks/useStores";
 
-const Container = styled.View`
-  padding: 8px;
+const FormContainer = styled.View`
+  margin-top: 16px;
 `
 
-const IMDBInfoContainer = styled.View`
-  margin-top: 16px
-`
-
-const InfoContainer = styled.View`
+const ButtonsContainer = styled.View`
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+`
+
+const DeleteButton = styled.View`
   margin-top: 8px;
 `
 
 const ShowMovie = inject('moviesStore')(observer((props: any) => {
-  const { moviesStore, navigation, route } = props
+  const { navigation, route } = props
   const { id } = route.params
+  const { moviesStore } = useStores()
   const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
   const [year, setYear] = useState('')
 
-  const getMovieState = (): IMovie => ({ title, author, year })
+  const getMovieState = (): IMovie => ({ title, year })
+  const getMovieFromStore = () => moviesStore.getMovieById(id)
 
   React.useEffect(() => {
     if (id) {
-      const movieData = moviesStore.getMovieById(id)
+      const movieData = getMovieFromStore()
       if (movieData) {
         setTitle(movieData.title)
-        setAuthor(movieData.author)
         setYear(movieData.year)
       }
     }
-  }, [route.params?.id]);
+  }, [id]);
 
   const onSavePress = () => moviesStore.updateMovie(id, getMovieState())
   const onDeletePress = () => {
     moviesStore.deleteMovie(id)
     navigation.navigate('TabMoviesScreen')
   }
-  return <Container>
-    <Input placeholder={'Title'} value={title} onChangeText={setTitle} />
-    <Input placeholder={'Author'} value={author} onChangeText={setAuthor} />
-    <Input placeholder={'Year'} value={year} onChangeText={setYear} />
-    <InfoContainer>
-      <Button title={'Save'} onPress={onSavePress} />
-      <Button title={'Delete'} buttonStyle={{ backgroundColor: '#e63946' }} onPress={onDeletePress} />
-      <IMDBInfoContainer>
-        <IMDBInfo movie={getMovieState()} />
-      </IMDBInfoContainer>
-    </InfoContainer>
-  </Container>
+  return <View>
+    <IMDBInfo movie={getMovieFromStore()} />
+    <FormContainer>
+      <Input placeholder={'Title'} value={title} onChangeText={setTitle} />
+      <Input placeholder={'Year'} value={year} onChangeText={setYear} />
+    </FormContainer>
+    <ButtonsContainer>
+      <Button title={'Save'} disabled={!title} onPress={onSavePress} containerStyle={{ width: 220 }} />
+      <DeleteButton>
+        <AntIcon name={'delete'} size={26} color={'#e63946'} onPress={onDeletePress} />
+      </DeleteButton>
+    </ButtonsContainer>
+  </View>
 }))
 
 export default ShowMovie

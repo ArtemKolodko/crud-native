@@ -19,12 +19,7 @@ export default {
             screens: {
               TabOneScreen: 'one',
             },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
+          }
         },
       },
       NotFound: '*',
