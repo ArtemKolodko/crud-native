@@ -3,7 +3,6 @@ import { View } from 'react-native'
 import { Input, Button } from 'react-native-elements'
 import styled from "styled-components/native";
 import { AntDesign as AntIcon } from "@expo/vector-icons";
-import { err } from "react-native-svg/lib/typescript/xml";
 
 enum Mode {
   create = 'create',
